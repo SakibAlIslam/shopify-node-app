@@ -19,7 +19,7 @@ Shopify.Context.initialize({
     SESSION_STORAGE: new Shopify.Session.MemorySessionStorage()
 });
 
-const port = parseInt(process.env.PORT, 10) || 3000;
+const port = parseInt(process.env.PORT, 10) || 80;
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({dev})
 const handle = app.getRequestHandler();
@@ -37,7 +37,11 @@ app.prepare().then(() => {
 
             ACTIVE_SHOPIFY_SHOPS[shop] = scope;
 
-            ctx.redirect(`/`);
+            if(ACTIVE_SHOPIFY_SHOPS[shop]){
+                ctx.redirect(`https://${shop}/admin/apps`);
+            }else{
+                ctx.redirect(`/?shop=${shop}`);
+            }
         }
     }))
 
